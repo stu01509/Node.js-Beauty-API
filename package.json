@@ -1,0 +1,20 @@
+{
+  "name": "node.js-beauty-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "Cliff Su <stu01509@yahoo.com.tw>",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-plugin-import": "^2.18.0",
+    "nodemon": "^1.19.1"
+  },
+  "repository": "git@github.com:stu01509/Node.js-Beauty-API.git"
+}
