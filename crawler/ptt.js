@@ -49,4 +49,5 @@ const getBeautyTopLink = () => {
   });
 };
 
-getBeautyTopLink();
+const getBeauty = getBeautyTopLink;
+getBeauty();
