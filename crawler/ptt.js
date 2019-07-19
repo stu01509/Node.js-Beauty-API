@@ -3,22 +3,44 @@ const cheerio = require('cheerio');
 
 const BEAUTY_URL = 'https://www.ptt.cc/bbs/Beauty/';
 
+const PostSchema = require('../models/Post');
+
 const beautyOptions = {
   url: BEAUTY_URL,
   method: 'GET',
 };
 
+// 抓取貼文內容
 const getBeautyPostContent = (url) => {
   request.get(`https://www.ptt.cc/${url}`, (err, res, body) => {
     if (err || res.statusCode !== 200) {
       return;
     }
     const $ = cheerio.load(body);
+    // 移除貼文留言
     $('.push').remove();
-    $('#main-container').each((index, content) => {
-      const imgUrls = $(content).text().match(/https?:\/\/.*imgur.*jpg/g);
-      console.log($(content).text());
-      console.log(imgUrls);
+    const title = $('#main-content > div:nth-child(3) > span.article-meta-value').text();
+    const content = $('#main-container').text();
+    const time = $('#main-content > div:nth-child(4) > span.article-meta-value').text();
+
+    const imgUrlArr = [];
+    const imgUrl = content.match(/https?:\/\/.*imgur.*jpg/g);
+    if (imgUrl) {
+      imgUrlArr.push(...imgUrl);
+    }
+
+    const insertPostData = new PostSchema.Ptt({
+      title,
+      content,
+      images: imgUrlArr,
+      time,
+      sourceLink: `https://www.ptt.cc/bbs/Beauty/${url}`,
+    });
+
+    insertPostData.save((dbErr, result) => {
+      if (dbErr) {
+        console.log(dbErr);
+      }
     });
   });
 };
@@ -49,5 +71,4 @@ const getBeautyTopLink = () => {
   });
 };
 
-const getBeauty = getBeautyTopLink;
-getBeauty();
+module.exports.getBeauty = getBeautyTopLink;
