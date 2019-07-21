@@ -34,7 +34,7 @@ const getBeautyPostContent = (url) => {
       content,
       images: imgUrlArr,
       time,
-      sourceLink: `https://www.ptt.cc/bbs/Beauty/${url}`,
+      sourceLink: `https://www.ptt.cc${url}`,
     });
 
     insertPostData.save((dbErr, result) => {
