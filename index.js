@@ -49,7 +49,7 @@ setInterval(() => {
   meteor.getMeteorsellphoto();
   dcard.getDressup();
   ptt.getBeauty();
-}, 150000);
+}, 1800000);
 
-server.listen(PORT, () => console.log(`
+server.listen(PORT || 3000, () => console.log(`
   Server is ruuning in ${PORT} PORT.`));
