@@ -2,16 +2,9 @@ const express = require('express');
 
 const router = express.Router();
 
-const DcardSchema = require('.././models/Post').Dcard;
+const DcardController = require('.././controllers/dcard');
 
-router.get('/', (req, res, next) => {
-  DcardSchema.find()
-    .limit(30)
-    .then((result) => {
-      res.status(200).json(
-        result,
-      );
-    });
-});
+router.get('/', DcardController.dcardGetAll);
+router.get('/search', DcardController.dcardQuery);
 
 module.exports = router;

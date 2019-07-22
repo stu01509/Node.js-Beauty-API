@@ -2,16 +2,9 @@ const express = require('express');
 
 const router = express.Router();
 
-const MeteorSchema = require('.././models/Post').Meteor;
+const MeteorController = require('.././controllers/meteor');
 
-router.get('/', (req, res, next) => {
-  MeteorSchema.find()
-    .limit(30)
-    .then((result) => {
-      res.status(200).json(
-        result,
-      );
-    });
-});
+router.get('/', MeteorController.meteorGetAll);
+router.get('/search', MeteorController.meteorQuery);
 
 module.exports = router;
