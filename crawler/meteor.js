@@ -25,12 +25,19 @@ const getMeteorsellphoto = () => {
         imgUrlArr.push(...imgUrl);
       }
 
+      let gender = '';
+      if (post.authorGender === 'male') {
+        gender = 'M';
+      } else if (post.authorGender === 'female') {
+        gender = 'F';
+      }
+
       const insertPostData = new PostSchema.Meteor({
         title: post.title,
         content: post.content,
         images: imgUrlArr,
         school: post.authorSchoolName,
-        gender: post.authorGender,
+        gender,
         time: post.createdAt,
         sourceLink: `https://meteor.today/article/${post.shortId}`,
       });
