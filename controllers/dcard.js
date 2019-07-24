@@ -1,8 +1,14 @@
 const DcardSchema = require('../models/Post').Dcard;
 
+const handler = require('.././libs/handler');
+
 exports.dcardGetAll = (req, res, next) => {
   // 跳過 skip 幾資料
-  const { skip } = req.query;
+  const { skip = 0 } = req.query;
+
+  if (isNaN(skip)) {
+    return next(new handler.QueryError('"skip" must be a number'));
+  }
 
   DcardSchema.find()
     .sort({
@@ -29,8 +35,12 @@ exports.dcardQuery = (req, res, next) => {
   // 跳過 skip 幾資料
   // sort 針對 time 做排序
   let {
-    query, sex, skip = 0, sort = -1,
+    query, sex, skip = 0, sort = 'new',
   } = req.query;
+
+  if (isNaN(skip)) {
+    return next(new handler.QueryError('"skip" muse be a number'));
+  }
 
   // Search Condition
   const queryCondition = [];
@@ -42,9 +52,17 @@ exports.dcardQuery = (req, res, next) => {
   }
 
   if (sex) {
+    if (sex !== 'm' && sex !== 'M'
+      && sex !== 'f' && sex !== 'F') {
+      return next(new handler.QueryError('"sex" muse be one of [m, f, M, F]'));
+    }
     queryCondition.push({
       gender: sex.toUpperCase(),
     });
+  }
+
+  if (sort !== 'new' && sort !== 'old') {
+    return next(new handler.QueryError('"sort" muse be one of [new, old]'));
   }
 
   if (sort === 'new') {
@@ -74,8 +92,5 @@ exports.dcardQuery = (req, res, next) => {
       );
     })
     .catch((err) => {
-      res.status(500).json({
-        err,
-      });
     });
 };

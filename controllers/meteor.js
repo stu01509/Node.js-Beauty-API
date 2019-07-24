@@ -1,8 +1,14 @@
 const MeteorSchema = require('../models/Post').Meteor;
 
+const handler = require('.././libs/handler');
+
 exports.meteorGetAll = (req, res, next) => {
   // 跳過 skip 幾資料  
   const { skip } = req.query;
+
+  if (isNaN(skip)) {
+    return next(new handler.QueryError('"skip" must be a number'));
+  }
 
   MeteorSchema.find()
     .sort({
@@ -29,8 +35,12 @@ exports.meteorQuery = (req, res, next) => {
   // 跳過 skip 幾資料
   // sort 針對 time 做排序
   let {
-    query, sex, skip = 0, sort = -1,
+    query, sex, skip = 0, sort = 'new',
   } = req.query;
+
+  if (isNaN(skip)) {
+    return next(new handler.QueryError('"skip" muse be a number'));
+  }
 
   // Search Condition
   const queryCondition = [];
@@ -42,6 +52,10 @@ exports.meteorQuery = (req, res, next) => {
   }
 
   if (sex) {
+    if (sex !== 'm' && sex !== 'M'
+      && sex !== 'f' && sex !== 'F') {
+      return next(new handler.QueryError('"sex" muse be one of [m, f, M, F]'));
+    }
     queryCondition.push({
       gender: sex.toUpperCase(),
     });
@@ -74,8 +88,5 @@ exports.meteorQuery = (req, res, next) => {
       );
     })
     .catch((err) => {
-      res.status(500).json({
-        err,
-      });
     });
 };

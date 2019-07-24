@@ -1,8 +1,14 @@
 const PttSchema = require('../models/Post').Ptt;
 
+const handler = require('.././libs/handler');
+
 exports.pttGetAll = (req, res, next) => {
   // 跳過 skip 幾資料
   const { skip } = req.query;
+
+  if (isNaN(skip)) {
+    return next(new handler.QueryError('"skip" must be a number'));
+  }
 
   PttSchema.find()
     .sort({
@@ -28,8 +34,12 @@ exports.pttQuery = (req, res, next) => {
   // 跳過 skip 幾資料
   // sort 針對 time 做排序
   let {
-    query, skip = 0, sort = -1,
+    query, skip = 0, sort = 'new',
   } = req.query;
+
+  if (isNaN(skip)) {
+    return next(new handler.QueryError('"skip" muse be a number'));
+  }
 
   // Search Condition
   const queryCondition = [];
@@ -38,6 +48,10 @@ exports.pttQuery = (req, res, next) => {
     queryCondition.push({
       title: new RegExp(query),
     });
+  }
+
+  if (sort !== 'new' && sort !== 'old') {
+    return next(new handler.QueryError('"sort" muse be one of [new, old]'));
   }
 
   if (sort === 'new') {
@@ -67,8 +81,5 @@ exports.pttQuery = (req, res, next) => {
       );
     })
     .catch((err) => {
-      res.status(500).json({
-        err,
-      });
     });
 };
