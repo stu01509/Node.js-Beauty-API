@@ -22,6 +22,8 @@ const meteor = require('./crawler/meteor');
 const dcard = require('./crawler/dcard');
 const ptt = require('./crawler/ptt');
 
+const handler = require('./libs/handler');
+
 const { PORT } = process.env;
 
 // Loading Config
@@ -44,6 +46,19 @@ app.use(bodyParse.urlencoded({
 app.use('/meteor', meteorRoutes);
 app.use('/dcard', dcardRoutes);
 app.use('/ptt', pttRoutes);
+app.use('*', (req, res, next) => next(new handler.NoFound('Not found')));
+
+app.use((error, req, res, next) => {
+  res.status(error.code);
+  if (error.isPublic) {
+    res.json({
+      name: error.name,
+      code: error.code,
+      message: error.message,
+      error: error.detailMessage,
+    });
+  }
+});
 
 setInterval(() => {
   meteor.getMeteorsellphoto();
