@@ -4,7 +4,7 @@ const handler = require('.././libs/handler');
 
 exports.pttGetAll = (req, res, next) => {
   // 跳過 skip 幾資料
-  const { skip } = req.query;
+  const { skip = 0 } = req.query;
 
   if (isNaN(skip)) {
     return next(new handler.QueryError('"skip" must be a number'));
