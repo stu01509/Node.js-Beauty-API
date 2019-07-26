@@ -50,14 +50,12 @@ app.use('*', (req, res, next) => next(new handler.NoFound('Not found')));
 
 app.use((error, req, res, next) => {
   res.status(error.code);
-  if (error.isPublic) {
-    res.json({
-      name: error.name,
-      code: error.code,
-      message: error.message,
-      error: error.detailMessage,
-    });
-  }
+  res.json({
+    name: error.name,
+    code: error.code,
+    message: error.message,
+    error: error.detailMessage,
+  });
 });
 
 setInterval(() => {
