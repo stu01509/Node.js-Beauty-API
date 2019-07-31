@@ -1,13 +1,17 @@
+const Joi = require('joi');
+
 const MeteorSchema = require('../models/Post').Meteor;
 
 const handler = require('.././libs/handler');
 
+const { getAllValidate, meteorValidate } = require('../libs/queryValidate');
+
 exports.meteorGetAll = (req, res, next) => {
   // 跳過 skip 幾資料  
-  const { skip = 0 } = req.query;
+  const { value, error } = Joi.validate(req.query, getAllValidate);
 
-  if (isNaN(skip)) {
-    return next(new handler.QueryError('"skip" must be a number'));
+  if (error) {
+    return next(new handler.QueryError(error.details[0].message));
   }
 
   MeteorSchema.find()
@@ -15,7 +19,7 @@ exports.meteorGetAll = (req, res, next) => {
       time: -1,
     })
     .limit(30)
-    .skip(Number(skip))
+    .skip(Number(value.skip))
     .exec()
     .then((result) => {
       res.status(200).json(
@@ -35,42 +39,34 @@ exports.meteorQuery = (req, res, next) => {
   // 跳過 skip 幾資料
   // sort 針對 time 做排序
   let {
-    query, sex, skip = 0, sort = 'new',
+    query, sex, skip, sort,
   } = req.query;
 
-  if (isNaN(skip)) {
-    return next(new handler.QueryError('"skip" muse be a number'));
+  const { value, error } = Joi.validate(req.query, meteorValidate);
+
+  if (error) {
+    return next(new handler.QueryError(error.details[0].message));
   }
 
   // Search Condition
   const queryCondition = [];
 
-  if (query) {
+  if (value.query) {
     queryCondition.push({
-      title: new RegExp(query),
+      title: new RegExp(value.query),
     });
   }
 
-  if (sex) {
-    if (sex !== 'm' && sex !== 'M'
-      && sex !== 'f' && sex !== 'F') {
-      return next(new handler.QueryError('"sex" muse be one of [m, f, M, F]'));
-    }
+  if (value.sex) {
     queryCondition.push({
-      gender: sex.toUpperCase(),
+      gender: value.sex.toUpperCase(),
     });
   }
 
-  if (sort === 'new') {
+  if (value.sort === 'new') {
     sort = -1;
-  } else if (sort === 'old') {
+  } else if (value.sort === 'old') {
     sort = 1;
-  }
-
-  if (queryCondition.length === 0) {
-    res.status(200).json(
-      [],
-    );
   }
 
   MeteorSchema.find({
@@ -80,7 +76,7 @@ exports.meteorQuery = (req, res, next) => {
       time: sort,
     })
     .limit(30)
-    .skip(Number(skip))
+    .skip(Number(value.skip))
     .exec()
     .then((result) => {
       res.status(200).json(
