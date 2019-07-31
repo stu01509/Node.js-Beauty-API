@@ -49,7 +49,7 @@ const getBeautyPostContent = (url) => {
     const time = $('#main-content > div:nth-child(4) > span.article-meta-value').text();
 
     const imgUrlArr = [];
-    const imgUrl = content.match(/https?:\/\/.*imgur.*jpg/g);
+    const imgUrl = content.match(/https?:\/\/.*imgur.*/g);
     if (imgUrl) {
       imgUrlArr.push(...imgUrl);
     }

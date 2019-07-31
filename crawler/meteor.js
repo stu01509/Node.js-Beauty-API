@@ -20,7 +20,7 @@ const getMeteorsellphoto = () => {
 
     resultContent.forEach((post) => {
       const imgUrlArr = [];
-      const imgUrl = post.content.match(/https?:\/\/.*imgur.*jpg/g);
+      const imgUrl = post.content.match(/https?:\/\/.*imgur.*/g);
       if (imgUrl) {
         imgUrlArr.push(...imgUrl);
       }
