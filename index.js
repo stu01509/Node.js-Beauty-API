@@ -53,8 +53,8 @@ app.use((error, req, res, next) => {
   res.json({
     name: error.name,
     code: error.code,
-    message: error.message,
-    error: error.detailMessage,
+    error: error.message,
+    message: error.detailMessage,
   });
 });
 
