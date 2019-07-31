@@ -7,7 +7,7 @@ const handler = require('.././libs/handler');
 const { getAllValidate, meteorValidate } = require('../libs/queryValidate');
 
 exports.meteorGetAll = (req, res, next) => {
-  // 跳過 skip 幾資料  
+  // 跳過 skip 幾資料
   const { value, error } = Joi.validate(req.query, getAllValidate);
 
   if (error) {
@@ -27,10 +27,9 @@ exports.meteorGetAll = (req, res, next) => {
       );
     })
     .catch((err) => {
-      res.status(500).json({
-        err,
-      });
+      next(new handler.DBError(err));
     });
+  return true;
 };
 
 exports.meteorQuery = (req, res, next) => {
@@ -38,9 +37,7 @@ exports.meteorQuery = (req, res, next) => {
   // sex 性別參數
   // 跳過 skip 幾資料
   // sort 針對 time 做排序
-  let {
-    query, sex, skip, sort,
-  } = req.query;
+  let { sort } = req.query;
 
   const { value, error } = Joi.validate(req.query, meteorValidate);
 
@@ -51,18 +48,21 @@ exports.meteorQuery = (req, res, next) => {
   // Search Condition
   const queryCondition = [];
 
+  // 有 query 值的話 Push 這個搜尋條件到 Array queryCondition
   if (value.query) {
     queryCondition.push({
       title: new RegExp(value.query),
     });
   }
 
+  // 有 sex 值的話 Push 這個搜尋條件到 Array queryCondition
   if (value.sex) {
     queryCondition.push({
       gender: value.sex.toUpperCase(),
     });
   }
 
+  // Sort 參數轉換
   if (value.sort === 'new') {
     sort = -1;
   } else if (value.sort === 'old') {
@@ -84,5 +84,7 @@ exports.meteorQuery = (req, res, next) => {
       );
     })
     .catch((err) => {
+      next(new handler.DBError(err));
     });
+  return true;
 };
