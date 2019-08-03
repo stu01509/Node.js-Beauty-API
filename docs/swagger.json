@@ -1,0 +1,589 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Beauty API",
+        "description": "Beauty API 使用爬蟲方式, 提供了 PTT 表特板 Meteor 賣照板與 Dcard 穿搭板三種平台上的文章 API, 並將文章中的圖片連結提出, 可做為單獨的圖片爬蟲.",
+        "version": "0.0.1"
+    },
+    "host": "nodejs-beauty-api.azurewebsites.net",
+    "schemes": [
+        "https"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "paths": {
+        "/dcard": {
+            "get": {
+                "summary": "Dcard 穿搭板最新資料",
+                "description": "取得 Dcard 穿搭板前 30 筆最新的資料.\n",
+                "parameters": [
+                    {
+                        "name": "skip",
+                        "in": "query",
+                        "description": "跳過前幾筆資料",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "一組 Dcard 穿搭板資料",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Dcard"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "搜尋參數錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "伺服器或資料庫異常.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "default": {
+                        "description": "未知的錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "tags": [
+                    "Dcard"
+                ]
+            }
+        },
+        "/dcard/search": {
+            "get": {
+                "summary": "Dcard 穿搭板搜尋",
+                "description": "搜尋 Dcard 穿搭板內容, 並且能夠針對性別, 文章新舊做搜尋.\n",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "搜尋內容, query 與 sex 欄位需要二選一",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "sex",
+                        "in": "query",
+                        "description": "發文者性別, query 與 sex 欄位需要二選一",
+                        "required": false,
+                        "type": "string",
+                        "enum": [
+                            "m",
+                            "f",
+                            "M",
+                            "F"
+                        ]
+                    },
+                    {
+                        "name": "skip",
+                        "in": "query",
+                        "description": "跳過前幾筆資料",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "資料排序",
+                        "required": false,
+                        "type": "string",
+                        "enum": [
+                            "new",
+                            "old"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "一組 Dcard 穿搭板資料",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Dcard"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "搜尋參數錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "伺服器或資料庫異常.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "default": {
+                        "description": "未知的錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "tags": [
+                    "Dcard"
+                ]
+            }
+        },
+        "/meteor": {
+            "get": {
+                "summary": "Meteor 賣照板最新資料",
+                "description": "取得 Meteor 賣照板前 30 筆最新的資料.\n",
+                "parameters": [
+                    {
+                        "name": "skip",
+                        "in": "query",
+                        "description": "跳過前幾筆資料",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "一組 Meteor 賣照板資料",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Meteor"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "搜尋參數錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "伺服器或資料庫異常.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "default": {
+                        "description": "未知的錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "tags": [
+                    "Meteor"
+                ]
+            }
+        },
+        "/meteor/search": {
+            "get": {
+                "summary": "Meteor 賣照板搜尋",
+                "description": "搜尋 Meteor 賣照板內容, 並且能夠針對性別, 文章新舊做搜尋.\n",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "搜尋內容, query 與 sex 欄位需要二選一",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "sex",
+                        "in": "query",
+                        "description": "發文者性別, query 與 sex 欄位需要二選一",
+                        "required": false,
+                        "type": "string",
+                        "enum": [
+                            "m",
+                            "f",
+                            "M",
+                            "F"
+                        ]
+                    },
+                    {
+                        "name": "skip",
+                        "in": "query",
+                        "description": "跳過前幾筆資料",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "資料排序",
+                        "required": false,
+                        "type": "string",
+                        "enum": [
+                            "new",
+                            "old"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "一組 Meteor 賣照板資料",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Meteor"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "搜尋參數錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "伺服器或資料庫異常.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "default": {
+                        "description": "未知的錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "tags": [
+                    "Meteor"
+                ]
+            }
+        },
+        "/ptt": {
+            "get": {
+                "summary": "PTT 表特板最新資料",
+                "description": "取得 PTT 表特板前 30 筆最新的資料.\n",
+                "parameters": [
+                    {
+                        "name": "skip",
+                        "in": "query",
+                        "description": "跳過前幾筆資料",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "一組 PTT 表特板資料",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/PTT"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "搜尋參數錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "伺服器或資料庫異常.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "default": {
+                        "description": "未知的錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "tags": [
+                    "PTT"
+                ]
+            }
+        },
+        "/ptt/search": {
+            "get": {
+                "summary": "PTT 表特板搜尋",
+                "description": "搜尋 PTT 表特板內容, 並且能夠針對文章新舊做搜尋.\n",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "搜尋內容",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "skip",
+                        "in": "query",
+                        "description": "跳過前幾筆資料",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "資料排序",
+                        "required": false,
+                        "type": "string",
+                        "enum": [
+                            "new",
+                            "old"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "一組 PTT 表特板資料",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/PTT"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "搜尋參數錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "伺服器或資料庫異常.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "default": {
+                        "description": "未知的錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "tags": [
+                    "PTT"
+                ]
+            }
+        }
+    },
+    "definitions": {
+        "Dcard": {
+            "type": "object",
+            "properties": {
+                "images": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "description": "文章內的所有圖片連結"
+                    }
+                },
+                "tag": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "description": "文章的 Tag 標籤"
+                    }
+                },
+                "_id": {
+                    "type": "string",
+                    "description": "該筆資料 id"
+                },
+                "title": {
+                    "type": "string",
+                    "description": "文章標題"
+                },
+                "content": {
+                    "type": "string",
+                    "description": "文章內文"
+                },
+                "school": {
+                    "type": "string",
+                    "description": "發文者學校"
+                },
+                "department": {
+                    "type": "string",
+                    "description": "發文者系所"
+                },
+                "gender": {
+                    "type": "string",
+                    "description": "發文者性別"
+                },
+                "time": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "發文時間"
+                },
+                "sourceLink": {
+                    "type": "string",
+                    "format": "url",
+                    "description": "文章連結"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "儲存至資料庫時間"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "最後的修改時間"
+                }
+            }
+        },
+        "Meteor": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string",
+                    "description": "該筆資料 id"
+                },
+                "images": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "description": "文章內的所有圖片連結"
+                    }
+                },
+                "tag": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "description": "文章的 Tag 標籤"
+                    }
+                },
+                "title": {
+                    "type": "string",
+                    "description": "文章標題"
+                },
+                "content": {
+                    "type": "string",
+                    "description": "文章內文"
+                },
+                "school": {
+                    "type": "string",
+                    "description": "發文者學校"
+                },
+                "department": {
+                    "type": "string",
+                    "description": "發文者科系"
+                },
+                "gender": {
+                    "type": "string",
+                    "description": "發文者性別"
+                },
+                "time": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "發文時間"
+                },
+                "sourceLink": {
+                    "type": "string",
+                    "format": "url",
+                    "description": "文章連結"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "儲存至資料庫時間"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "最後的修改時間"
+                }
+            }
+        },
+        "PTT": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string",
+                    "description": "該筆資料 id"
+                },
+                "images": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "description": "文章內的所有圖片連結"
+                    }
+                },
+                "tag": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "description": "文章的 Tag 標籤"
+                    }
+                },
+                "title": {
+                    "type": "string",
+                    "description": "文章標題"
+                },
+                "content": {
+                    "type": "string",
+                    "description": "文章內文"
+                },
+                "time": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "發文時間"
+                },
+                "sourceLink": {
+                    "type": "string",
+                    "format": "url",
+                    "description": "文章連結"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "儲存至資料庫時間."
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "最後的修改時間"
+                }
+            }
+        },
+        "Error": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Error Handler 名稱"
+                },
+                "code": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "HTTP Status Code"
+                },
+                "error": {
+                    "type": "string",
+                    "description": "錯誤狀態"
+                },
+                "message": {
+                    "type": "string",
+                    "description": "錯誤訊息"
+                }
+            }
+        }
+    }
+}
