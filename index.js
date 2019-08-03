@@ -5,6 +5,7 @@ const bodyParse = require('body-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
+const swaggerUi = require('swagger-ui-express');
 
 const app = express();
 const server = http.createServer(app);
@@ -29,6 +30,9 @@ const { PORT } = process.env;
 // Loading Config
 require('dotenv').config();
 
+// Loading Swagger API Docs
+const swaggerDocument = require('./docs/swagger.json');
+
 app.use(cors());
 app.use(helmet());
 app.use(compression());
@@ -46,6 +50,7 @@ app.use(bodyParse.urlencoded({
 app.use('/meteor', meteorRoutes);
 app.use('/dcard', dcardRoutes);
 app.use('/ptt', pttRoutes);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('*', (req, res, next) => next(new handler.NoFound('Not found')));
 
 app.use((error, req, res, next) => {
