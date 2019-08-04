@@ -42,14 +42,16 @@ const getDcardDressupPost = (id) => {
   });
 };
 
-const getDcardDressupLink = () => {
+const getDcardDressupLink = () => new Promise((resolve, reject) => {
   request(dcardOptions, (err, res, body) => {
     if (err || res.statusCode !== 200) {
+      reject();
       return;
     }
     const allContent = JSON.parse(body);
+    resolve(allContent[0]);
     allContent.forEach(item => getDcardDressupPost(item.id));
   });
-};
+});
 
 module.exports.getDressup = getDcardDressupLink;
