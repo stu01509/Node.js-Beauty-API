@@ -49,7 +49,7 @@ const getDcardDressupLink = () => new Promise((resolve, reject) => {
       return;
     }
     const allContent = JSON.parse(body);
-    resolve(allContent[0]);
+    resolve(allContent.length);
     allContent.forEach(item => getDcardDressupPost(item.id));
   });
 });

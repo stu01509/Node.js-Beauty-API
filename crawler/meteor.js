@@ -10,9 +10,10 @@ const meteorOptions = {
   form: { boardId: '56fcf952299e4a3376892c1f', pageSize: '30' },
 };
 
-const getMeteorsellphoto = () => {
+const getMeteorsellphoto = () => new Promise((resolve, reject) => {
   request(meteorOptions, (err, res, body) => {
     if (err || res.statusCode !== 200) {
+      reject();
       return;
     }
     const allContent = JSON.parse(`${body}`);
@@ -48,7 +49,8 @@ const getMeteorsellphoto = () => {
         }
       });
     });
+    resolve(resultContent.length);
   });
-};
+});
 
 module.exports.getMeteorsellphoto = getMeteorsellphoto;
