@@ -21,7 +21,7 @@ const meteorValidate = Joi.object().keys({
 const pttValidate = Joi.object().keys({
   query: Joi.string(),
   skip: Joi.number().default(0).positive(),
-  sort: Joi.string().default('now').valid(['new', 'old']),
+  sort: Joi.string().default('new').valid(['new', 'old']),
 }).or('query');
 
 module.exports.getAllValidate = getAllValidate;
