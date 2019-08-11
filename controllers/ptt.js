@@ -50,7 +50,7 @@ exports.pttQuery = (req, res, next) => {
   // 有 query 值的話 Push 這個搜尋條件到 Array queryCondition
   if (value.query) {
     queryCondition.push({
-      title: new RegExp(value.query),
+      title: { $regex: value.query, $options: 'i' },
     });
   }
 
