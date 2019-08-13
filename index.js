@@ -63,6 +63,12 @@ app.use((error, req, res, next) => {
   });
 });
 
+setTimeout(() => {
+  meteor.getMeteorsellphoto();
+  dcard.getDressup();
+  ptt.getBeauty();
+}, 60000);
+
 setInterval(() => {
   meteor.getMeteorsellphoto();
   dcard.getDressup();
