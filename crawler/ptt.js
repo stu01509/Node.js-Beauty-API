@@ -72,7 +72,7 @@ const getBeautyPostContent = (url) => {
 
 // 抓取每篇貼文的連結
 const getBeautyPostLink = (id) => {
-  request.get(`https://www.ptt.cc/bbs/Beauty/index${id}.html`, (err, res, body) => {   
+  request.get(`https://www.ptt.cc/bbs/Beauty/index${id}.html`, (err, res, body) => {
     if (err || res.statusCode !== 200) {
       return;
     }
