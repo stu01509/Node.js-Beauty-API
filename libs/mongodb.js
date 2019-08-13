@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 mongoose.Promise = Promise;
+mongoose.set('useCreateIndex', true);
 
 // Loading Config
 require('dotenv').config();
