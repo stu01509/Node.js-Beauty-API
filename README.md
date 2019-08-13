@@ -1,7 +1,7 @@
 # Node.js-Beauty-API - PTT表特板 API
 
 
-<!-- [![License: MIT](https://img.shields.io/badge/node.js->=_8.0-green.svg)](https://opensource.org/licenses/MIT) -->
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/76470b0961b247d194648deda1ceb3b2)](https://app.codacy.com/app/stu01509/Node.js-Beauty-API?utm_source=github.com&utm_medium=referral&utm_content=stu01509/Node.js-Beauty-API&utm_campaign=Badge_Grade_Dashboard)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://travis-ci.org/stu01509/Node.js-Beauty-API.svg?branch=master)](https://travis-ci.org/stu01509/Node.js-Beauty-API)
 
